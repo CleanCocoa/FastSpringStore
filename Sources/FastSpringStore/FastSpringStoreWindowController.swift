@@ -22,9 +22,14 @@ fileprivate extension NSNib.Name {
 
 public class FastSpringStoreWindowController: NSWindowController {
 
-    public convenience init() {
-        self.init(window: nil)
+    public required init() {
+        super.init(window: nil)
         Bundle.module.loadNibNamed(.fastSpringStoreWindow, owner: self, topLevelObjects: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     @IBOutlet public var webView: WebView!
