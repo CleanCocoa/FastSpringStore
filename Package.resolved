@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "cocoafob",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/glebd/cocoafob",
+      "state" : {
+        "revision" : "f706f2056ebc91c4d0b646333c4fb704fcb52aee",
+        "version" : "2.4.0"
+      }
+    },
+    {
+      "identity" : "triallicensing",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/CleanCocoa/TrialLicensing.git",
+      "state" : {
+        "revision" : "468ea2b969ae3195251a27e8c1dfc331791c71b8",
+        "version" : "3.3.2"
+      }
+    }
+  ],
+  "version" : 2
+}
