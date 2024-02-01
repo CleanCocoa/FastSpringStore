@@ -3,27 +3,27 @@
 // See the file LICENSE for copying permission.
 
 import Foundation
-import FsprgEmbeddedStore  // for the store mode constants
 
 extension FastSpringStoreInfo {
-    public init?(fromPlist url: URL) {
-        guard let info = NSDictionary(contentsOf: url) as? [String : String]
-        else { return nil }
-        self.init(fromDictionary: info)
+    public init?(
+        fromPlist url: URL,
+        storeMode: StoreMode = .active
+    ) {
+        guard let info = NSDictionary(contentsOf: url) as? [String : String] else { return nil }
+        self.init(
+            fromDictionary: info,
+            storeMode: storeMode
+        )
     }
 
-    public init?(fromDictionary info: [String : String]) {
+    public init?(
+        fromDictionary info: [String : String],
+        storeMode: StoreMode = .active
+    ) {
         guard let storeID = info["storeID"],
               let productName = info["productName"],
               let productID = info["productID"]
         else { return nil }
-
-#if DEBUG
-        NSLog("Test Store Mode")
-        let storeMode = kFsprgModeTest
-#else
-        let storeMode = kFsprgModeActive
-#endif
 
         self.init(
             storeID: storeID,

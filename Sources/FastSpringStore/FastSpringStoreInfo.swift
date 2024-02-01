@@ -2,21 +2,23 @@
 // 
 // See the file LICENSE for copying permission.
 
-import Foundation
+public struct FastSpringStoreInfo: Equatable {
+    public enum StoreMode: Equatable {
+        case active, test
+    }
 
-public struct FastSpringStoreInfo {
-    let storeID: String
-    
-    let productName: String
-    let productID: String
-    
-    let storeMode: String
-    
+    public let storeID: String
+
+    public let productName: String
+    public let productID: String
+
+    public let storeMode: StoreMode
+
     public init(
         storeID: String,
         productName: String,
         productId: String,
-        storeMode: String
+        storeMode: StoreMode
     ) {
         self.storeID = storeID
         self.productName = productName

@@ -31,9 +31,14 @@ public class FastSpringStoreController: NSObject {
 
         // Set up store to display the correct product
         storeParameters.orderProcessType = kFsprgOrderProcessDetail
-        storeParameters.setStoreId(self.storeInfo.storeID,
-                                   withProductId: self.storeInfo.productID)
-        storeParameters.mode = self.storeInfo.storeMode
+        storeParameters.setStoreId(
+            self.storeInfo.storeID,
+            withProductId: self.storeInfo.productID
+        )
+        storeParameters.mode = switch self.storeInfo.storeMode {
+        case .active: kFsprgModeActive
+        case .test: kFsprgModeTest
+        }
 
         // Pre-populate form fields with personal contact details
         let me = Me()
