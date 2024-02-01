@@ -17,12 +17,12 @@ public struct FastSpringStoreInfo: Equatable {
     public init(
         storeID: String,
         productName: String,
-        productId: String,
+        productID: String,
         storeMode: StoreMode
     ) {
         self.storeID = storeID
         self.productName = productName
-        self.productID = productId
+        self.productID = productID
         self.storeMode = storeMode
     }
 }

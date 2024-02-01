@@ -28,7 +28,7 @@ extension FastSpringStoreInfo {
         self.init(
             storeID: storeID,
             productName: productName,
-            productId: productID,
+            productID: productID,
             storeMode: storeMode
         )
     }
