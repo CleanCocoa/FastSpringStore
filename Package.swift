@@ -9,8 +9,8 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "FastSpringStore",
-            targets: ["FastSpringStore"]
+            name: "FastSpringClassicStore",
+            targets: ["FastSpringClassicStore"]
         )
     ],
     dependencies: [
@@ -23,7 +23,7 @@ let package = Package(
             checksum: "f105f849e252ee77023aa2df99bd043f6624b4fc8748b37947aab8d3b82a3d9c"
         ),
         .target(
-            name: "FastSpringStore",
+            name: "FastSpringClassicStore",
             dependencies: [
                 "TrialLicense",
                 .target(name: "FsprgEmbeddedStore"),
