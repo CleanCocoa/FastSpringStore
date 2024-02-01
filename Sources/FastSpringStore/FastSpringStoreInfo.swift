@@ -5,19 +5,22 @@
 import Foundation
 
 public struct FastSpringStoreInfo {
-    
-    let storeId: String
+    let storeID: String
     
     let productName: String
-    let productId: String
+    let productID: String
     
     let storeMode: String
     
-    init(storeId: String, productName: String, productId: String, storeMode: String) {
-        
-        self.storeId = storeId
+    public init(
+        storeID: String,
+        productName: String,
+        productId: String,
+        storeMode: String
+    ) {
+        self.storeID = storeID
         self.productName = productName
-        self.productId = productId
+        self.productID = productId
         self.storeMode = storeMode
     }
 }

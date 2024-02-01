@@ -10,7 +10,7 @@ public protocol FastSpringStoreDelegate: AnyObject {
 }
 
 public class FastSpringStore {
-
+    
     public let storeInfo: FastSpringStoreInfo
     
     public var storeDelegate: FastSpringStoreDelegate?
@@ -28,16 +28,16 @@ public class FastSpringStore {
         self.storeWindowController = storeWindowController
         self.storeInfo = storeInfo
     }
-
+    
     var didLoad = false
-
+    
     public func showStore() {
-
+        
         if didLoad {
             storeWindowController.reloadStore(self)
             return
         }
-
+        
         storeWindowController.storeController = storeController
         storeWindowController.showWindow(self)
         storeWindowController.storeDelegate = storeDelegate
