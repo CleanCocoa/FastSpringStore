@@ -9,14 +9,25 @@ let package = Package(
     ],
     products: [
         .library(
+            name: "FastSpringStore",
+            targets: ["FastSpringStore"]
+        ),
+        .library(
             name: "FastSpringClassicStore",
             targets: ["FastSpringClassicStore"]
-        )
+        ),
     ],
     dependencies: [
         .package(name: "TrialLicense", url: "https://github.com/CleanCocoa/TrialLicensing.git", .upToNextMajor(from: "3.2.0")),
     ],
     targets: [
+        .target(
+            name: "FastSpringStore",
+            dependencies: [
+                "TrialLicense",
+            ]
+        ),
+
         .binaryTarget(
             name: "FsprgEmbeddedStore",
             url: "https://github.com/DivineDominion/FsprgEmbeddedStoreMac/releases/download/2.0.0/FsprgEmbeddedStore.xcframework.zip",
@@ -31,6 +42,6 @@ let package = Package(
             resources: [
                 .copy("FastSpringStoreWindowController.xib"),
             ]
-        )
+        ),
     ]
 )
