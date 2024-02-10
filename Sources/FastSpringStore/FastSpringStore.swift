@@ -25,4 +25,8 @@ public final class FastSpringStore: NSObject {
         windowController.title = title
         windowController.showWindow(self)
     }
+
+    public func closeWindow() {
+        windowController.close()
+    }
 }
