@@ -23,6 +23,8 @@ class FastSpringStoreViewController: NSViewController, WKNavigationDelegate {
         return webView
     }()
 
+    lazy var eventHandler = FastSpringStoreEventHandler()
+
     required init(storeURL: URL) {
         self.storeURL = storeURL
         super.init(nibName: nil, bundle: nil)
@@ -46,8 +48,15 @@ class FastSpringStoreViewController: NSViewController, WKNavigationDelegate {
     }
 
     override func viewDidAppear() {
+        super.viewDidAppear()
         let urlRequest = URLRequest(url: storeURL)
+        eventHandler.register(in: webView.configuration.userContentController)
         webView.load(urlRequest)
+    }
+
+    override func viewDidDisappear() {
+        eventHandler.unregister(from: webView.configuration.userContentController)
+        super.viewDidDisappear()
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
