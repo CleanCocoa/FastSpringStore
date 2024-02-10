@@ -2,18 +2,18 @@
 
 public struct FastSpringPurchase: Equatable {
     public struct License: Equatable {
-        public enum LicenseType: String {
+        public enum LicenseType: String, Equatable {
             case cocoaFob = "CocoaFob_license"
         }
 
         public let licenseCode: String
         public let licenseName: String
-        public let licenseType: String
+        public let licenseType: LicenseType
 
         public init(
             licenseCode: String,
             licenseName: String,
-            licenseType: String
+            licenseType: LicenseType
         ) {
             self.licenseCode = licenseCode
             self.licenseName = licenseName
@@ -35,6 +35,8 @@ public struct FastSpringPurchase: Equatable {
         self.licenses = licenses
     }
 }
+
+extension FastSpringPurchase.License.LicenseType: Decodable { }
 
 extension FastSpringPurchase.License: Decodable {
     enum CodingKeys: String, CodingKey {
@@ -69,7 +71,7 @@ extension FastSpringPurchase: Decodable {
         for key in fulfillmentsContainer.allKeys {
             do {
                 let decodedLicenses = try fulfillmentsContainer.decode([License].self, forKey: key)
-                    .filter { $0.licenseType == License.LicenseType.cocoaFob.rawValue }
+                    .filter { $0.licenseType == .cocoaFob }
                 licenses.append(contentsOf: decodedLicenses)
             } catch {
                 continue

@@ -50,9 +50,9 @@ final class FastSpringPurchaseTests: XCTestCase {
         XCTAssertEqual(purchase.product, "The Product Name")
         XCTAssertEqual(purchase.quantity, 1)
 
-        let expectedLicense0 = FastSpringPurchase.License(licenseCode: "THE_LICENSE_CODE_0", licenseName: "Foo Bar", licenseType: "CocoaFob_license")
+        let expectedLicense0 = FastSpringPurchase.License(licenseCode: "THE_LICENSE_CODE_0", licenseName: "Foo Bar", licenseType: .cocoaFob)
         // `product_license_1` is of unknown type and should be ignored
-        let expectedLicense2 = FastSpringPurchase.License(licenseCode: "THE_LICENSE_CODE_2", licenseName: "Buzz McFizz", licenseType: "CocoaFob_license")
+        let expectedLicense2 = FastSpringPurchase.License(licenseCode: "THE_LICENSE_CODE_2", licenseName: "Buzz McFizz", licenseType: .cocoaFob)
         let expectedLicenses = [expectedLicense0, expectedLicense2].sorted(by: licenseNameAsc)
         let actualLicenses = purchase.licenses.sorted(by: licenseNameAsc)
         XCTAssertEqual(actualLicenses, expectedLicenses)
