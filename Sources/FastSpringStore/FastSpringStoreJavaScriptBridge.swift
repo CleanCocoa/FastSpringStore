@@ -5,14 +5,14 @@ import WebKit
 
 typealias JSON = [String : Any]
 
-class FastSpringStoreEventHandler {
+class FastSpringStoreJavaScriptBridge {
     /// Avoids potential retain cycles between `WKUserContentController` and `FastSpringStoreEventHandler`.
     private class WeakProxy: NSObject, WKScriptMessageHandler {
-        private weak var eventHandler: FastSpringStoreEventHandler?
+        private weak var bridge: FastSpringStoreJavaScriptBridge?
 
-        init(eventHandler: FastSpringStoreEventHandler) {
+        init(bridge: FastSpringStoreJavaScriptBridge) {
             super.init()
-            self.eventHandler = eventHandler
+            self.bridge = bridge
         }
 
         func userContentController(
@@ -20,7 +20,7 @@ class FastSpringStoreEventHandler {
             didReceive message: WKScriptMessage
         ) {
             guard let messageName = MessageName(rawValue: message.name) else { return }
-            eventHandler?.handleMessage(name: messageName, body: message.body)
+            bridge?.handleMessage(name: messageName, body: message.body)
         }
     }
 
@@ -43,12 +43,12 @@ class FastSpringStoreEventHandler {
         case fastSpringPopupWebhookReceived
     }
 
-    private lazy var proxy = WeakProxy(eventHandler: self)
+    private lazy var proxy = WeakProxy(bridge: self)
 
-    let purchasedItemsCallback: (JSON) -> Void
+    let purchaseEventHandler: ([JSON]) -> Void
 
-    init(purchasedItemsCallback: @escaping (JSON) -> Void) {
-        self.purchasedItemsCallback = purchasedItemsCallback
+    init(purchaseEventHandler: @escaping ([JSON]) -> Void) {
+        self.purchaseEventHandler = purchaseEventHandler
     }
 
     func register(in userContentController: WKUserContentController) {
@@ -106,7 +106,7 @@ function fsprg_dataPopupWebhookReceived(data) {
                 assertionFailure("`items` should be an object array")
                 return
             }
-            items.forEach(purchasedItemsCallback)
+            purchaseEventHandler(items)
         }
     }
 }

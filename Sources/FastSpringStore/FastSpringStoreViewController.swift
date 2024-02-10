@@ -23,7 +23,7 @@ class FastSpringStoreViewController: NSViewController, WKNavigationDelegate {
         return webView
     }()
 
-    lazy var eventHandler = FastSpringStoreEventHandler() { print($0) }  // FIXME: Stub
+    lazy var bridge = FastSpringStoreJavaScriptBridge() { print($0) }  // FIXME: Stub
 
     required init(storeURL: URL) {
         self.storeURL = storeURL
@@ -50,12 +50,12 @@ class FastSpringStoreViewController: NSViewController, WKNavigationDelegate {
     override func viewDidAppear() {
         super.viewDidAppear()
         let urlRequest = URLRequest(url: storeURL)
-        eventHandler.register(in: webView.configuration.userContentController)
+        bridge.register(in: webView.configuration.userContentController)
         webView.load(urlRequest)
     }
 
     override func viewDidDisappear() {
-        eventHandler.unregister(from: webView.configuration.userContentController)
+        bridge.unregister(from: webView.configuration.userContentController)
         super.viewDidDisappear()
     }
 
