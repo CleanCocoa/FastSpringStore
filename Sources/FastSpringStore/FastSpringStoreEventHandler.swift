@@ -3,6 +3,8 @@
 import Foundation
 import WebKit
 
+typealias JSON = [String : Any]
+
 class FastSpringStoreEventHandler {
     /// Avoids potential retain cycles between `WKUserContentController` and `FastSpringStoreEventHandler`.
     private class WeakProxy: NSObject, WKScriptMessageHandler {
@@ -43,6 +45,12 @@ class FastSpringStoreEventHandler {
 
     private lazy var proxy = WeakProxy(eventHandler: self)
 
+    let purchasedItemsCallback: (JSON) -> Void
+
+    init(purchasedItemsCallback: @escaping (JSON) -> Void) {
+        self.purchasedItemsCallback = purchasedItemsCallback
+    }
+
     func register(in userContentController: WKUserContentController) {
         let callbackInstallationScript = WKUserScript(
             source: """
@@ -82,13 +90,23 @@ function fsprg_dataPopupWebhookReceived(data) {
     ) {
         switch messageName {
         case .fastSpringDataReceived:
-            guard let jsonPayload = body as? [String : Any] else { return }
+            guard let jsonPayload = body as? JSON else { return }
             #if DEBUG
             print("Received data-data-callback: \(jsonPayload)")
             #endif
+
         case .fastSpringPopupWebhookReceived:
-            guard let jsonPayload = body as? [String : Any] else { return }
-            print(jsonPayload)  // FIXME: stub
+            guard let jsonPayload = body as? JSON else {
+                assertionFailure("Data should be a JSON object representation")
+                return
+            }
+            assert(jsonPayload["items"] != nil,
+                   "Data should contain an `items` key")
+            guard let items = jsonPayload["items"] as? [JSON] else {
+                assertionFailure("`items` should be an object array")
+                return
+            }
+            items.forEach(purchasedItemsCallback)
         }
     }
 }

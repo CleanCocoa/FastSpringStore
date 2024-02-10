@@ -23,7 +23,7 @@ class FastSpringStoreViewController: NSViewController, WKNavigationDelegate {
         return webView
     }()
 
-    lazy var eventHandler = FastSpringStoreEventHandler()
+    lazy var eventHandler = FastSpringStoreEventHandler() { print($0) }  // FIXME: Stub
 
     required init(storeURL: URL) {
         self.storeURL = storeURL
