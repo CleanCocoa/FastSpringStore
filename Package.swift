@@ -27,6 +27,10 @@ let package = Package(
                 "TrialLicense",
             ]
         ),
+        .testTarget(
+            name: "FastSpringStoreTests",
+            dependencies: ["FastSpringStore"]
+        ),
 
         .binaryTarget(
             name: "FsprgEmbeddedStore",
