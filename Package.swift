@@ -21,12 +21,7 @@ let package = Package(
         .package(name: "TrialLicense", url: "https://github.com/CleanCocoa/TrialLicensing.git", .upToNextMajor(from: "3.2.0")),
     ],
     targets: [
-        .target(
-            name: "FastSpringStore",
-            dependencies: [
-                "TrialLicense",
-            ]
-        ),
+        .target(name: "FastSpringStore"),
         .testTarget(
             name: "FastSpringStoreTests",
             dependencies: ["FastSpringStore"]

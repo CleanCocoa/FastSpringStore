@@ -5,16 +5,20 @@ import TrialLicense
 
 public final class FastSpringStore: NSObject {
     public let storeURL: URL
-    public let purchaseCallback: (License) -> Void
+    public let purchaseCallback: (FastSpringStore, [FastSpringPurchase]) -> Void
 
-    lazy var windowController = FastSpringStoreWindowController(storeURL: storeURL)
+    lazy var windowController = FastSpringStoreWindowController(
+        storeURL: storeURL,
+        purchaseCallback: { [unowned self] purchase in
+            self.purchaseCallback(self, purchase)
+        })
 
     public init(
         storeURL: URL,
-        licensePurchase: @escaping (License) -> Void
+        purchaseCallback: @escaping (FastSpringStore, [FastSpringPurchase]) -> Void
     ) {
         self.storeURL = storeURL
-        self.purchaseCallback = licensePurchase
+        self.purchaseCallback = purchaseCallback
     }
 
     public func showStore(title: String) {

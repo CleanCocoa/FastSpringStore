@@ -13,8 +13,11 @@ class FastSpringStoreWindowController: NSWindowController {
         }
     }
 
-    required init(storeURL: URL) {
-        let storeViewController = FastSpringStoreViewController(storeURL: storeURL)
+    required init(
+        storeURL: URL,
+        purchaseCallback: @escaping ([FastSpringPurchase]) -> Void
+    ) {
+        let storeViewController = FastSpringStoreViewController(storeURL: storeURL, purchaseCallback: purchaseCallback)
         self.storeViewController = storeViewController
 
         let window = NSWindow(contentViewController: storeViewController)
