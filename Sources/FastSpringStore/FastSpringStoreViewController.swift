@@ -23,7 +23,17 @@ class FastSpringStoreViewController: NSViewController, WKNavigationDelegate {
         return webView
     }()
 
-    lazy var bridge = FastSpringStoreJavaScriptBridge() { print($0) }  // FIXME: Stub
+    lazy var bridge = FastSpringStoreJavaScriptBridge() { itemsJSON in
+        do {
+            // Convert JSON back to data for decoding.
+            let itemsData = try JSONSerialization.data(withJSONObject: itemsJSON, options: [])
+            let decoder = JSONDecoder()
+            let purchases = try decoder.decode([FastSpringPurchase].self, from: itemsData)
+            print(purchases) // FIXME: stub
+        } catch {
+            assertionFailure("Decoding error: \(error)")
+        }
+    }
 
     required init(storeURL: URL) {
         self.storeURL = storeURL
