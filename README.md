@@ -155,7 +155,7 @@ class PurchaseLicense {
 
 Add this to your app, e.g. by abusing the popular _Put Everything Into the AppDelegate_ Anti-Pattern:
 
-```
+```swift
 // AppDelegate.swift
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
