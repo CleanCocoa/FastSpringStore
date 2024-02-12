@@ -36,7 +36,7 @@ Embedded Storefronts are a minimal version of the store UI. They only show the c
 
 To setup the store:
 
-1. Log into the [FastSpring Dashboard](https://app.fastspring.com/), 
+1. Log into the [FastSpring Dashboard](https://app.fastspring.com/),
 2. navigate to _Storefronts ▶ Embedded Storefronts_,
 3. "Create Embedded Storefront" and pick a unique ID for the storefront.
 
@@ -48,9 +48,9 @@ Note that the new storefront starts with:
 - "No whitelisted websites", so you can't embed it anywhere, yet;
 - No products in the storefront, so you can't offer anything, yet.
 
-I suggest starting with "Products": add the app you want to sell to the store. 
+I suggest starting with "Products": add the app you want to sell to the store.
 
-Then "whitelist" your website so you can put the Embedded Store online in the next step. 
+Then "whitelist" your website so you can put the Embedded Store online in the next step.
 
 #### Storefront HTML
 
@@ -72,7 +72,7 @@ This is the result, with placeholders in all caps:
 <script>fastspring.builder.add("PRODUCT-ID");</script>
 ```
 
-That's all the HTML you really need. 
+That's all the HTML you really need.
 
 Replace the placeholders `PRODUCT-ID` and `STOREFRONT-ID`, then upload this to your whitelisted domain.
 
@@ -81,12 +81,14 @@ In "Offline" mode, the `STOREFRONT-ID` will include "`test.onfastspring`" in the
 When the storefront is displayed in your app, [this package will inject][inject] the callback `fsprg_dataPopupWebhookReceived` into the web view to handle purchases. You don't need to implement any JavaScript here.
 
 > [!TIP]
-> I suggest uploading two versions of this template: 
-> 
+> I suggest uploading two versions of this template:
+>
 > 1. The live store used in production, e.g. at `myapp.com/embedded-store`
 > 2. The test store used internally for `DEBUG` builds, e.g. at `myapp.com/embedded-store/test`.
-> 
-> This way, you can test the checkout process with FastSpring's placeholder credit cards details.
+>
+> This way, you can test the checkout process with FastSpring's placeholder credit cards details. The test store includes a prominent badge at the top. Clicking it reveals how you can place test purchases:
+>
+> !["Test Mode" badge](assets/screenshot-test-mode.png)
 
 [inject]: https://github.com/CleanCocoa/FastSpringStore/blob/5a70b488a72c623bb85b703c8c3533f67125c57d/Sources/FastSpringStore/FastSpringStoreJavaScriptBridge.swift#L55
 
@@ -94,12 +96,16 @@ When the storefront is displayed in your app, [this package will inject][inject]
 
 Check that the Embedded Store works. Access the HTML file you prepared in your web browser.
 
-If you see a checkout form, you're good to go. If it works in the browser, it'll work in the app.
+If it works in the browser, it'll work in the app.
 
-> [!TIP]
-> Does the store UI only show placeholder animations? 
-> 
-> - Make sure you're using the `test` URL while in "Offline" mode, 
+So once you see a checkout form to make purchases, you're good to go. We'll embed that in the app next.
+
+> [!WARNING]
+> ![Screenshot of the store's loading animations](assets/screenshot-loading-failure.png)
+>
+> Do you just see placeholder loading animations?
+>
+> - Make sure you're using the `test` URL while in "Offline" mode,
 > - or switch to "Online" before accessing the store for production.
 > - Ensure a product is added to the cart, otherwise the store won't load:
 >     ```html
@@ -108,10 +114,12 @@ If you see a checkout form, you're good to go. If it works in the browser, it'll
 
 ### Using the Embedded Storefront in Your App
 
-The following code example ties together 
+Import this packagage into your project. Then use `FastSpringStore` to access your Embedded Storefront HTML.
+
+The following code example ties together
 
 - setting up your Embedded Storefront URLs,
-- initializing the `FastSpringStore` UI to display the Embedded Store, and finally 
+- initializing the `FastSpringStore` UI to display the Embedded Store, and finally
 - unlocks app functionality after a purchase.
 
 ```swift
@@ -137,9 +145,9 @@ class PurchaseLicense {
                 for license in purchase.licenses {
                     // Unlock via license.licenseName & license.licenseCode, e.g.
                     // using the https://github.com/CleanCocoa/TrialLicensing package:
-                    // 
+                    //
                     //   TrialLicensing.AppLicensing.register(
-                    //       name: license.licenseName, 
+                    //       name: license.licenseName,
                     //       licenseCode: license.licenseCode
                     //   )
                 }
@@ -160,22 +168,45 @@ Add this to your app, e.g. by abusing the popular _Put Everything Into the AppDe
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
     // ...
-    
+
     lazy var purchaseLicense = PurchaseLicense()
-    
+
     @IBAction func buyApp(_ sender: Any?) {
         purchaseLicense.showStore()
     }
-    
+
     // ...
 }
 ```
+
+When you call `showStore()`, you should see a small window appear that displays your Embedded Storefront similar to how the web browser does.
+
+> [!WARNING]
+> ![Screenshot of the store's loading animations](assets/screenshot-loading-failure.png)
+>
+> If you just see placeholder loading animations, verify that you can access the URL in your web browser, first.
+>
+> Then check that you are using the correct store URL, e.g. the `test.onfastspring` subdomain in `DEBUG` builds, or the live URL for production, and that your Embedded Store is actually "Online".
+
+## Preparing to Ship
+
+Go through the checkout flow with the test store to verify that the purchase works and that your app is being unlocked successfully.
+
+The switch from "debug" to "release" is to replace the `test.onfastspring` subdomain with `onfastspring` in the Embedded Store HTML. The rest of the setup doesn't change. If you followed my advice, you have two HTML files for this anyway, so you do not need to change the HTML files, only the store URLs.
+
+1. Change the Embedded Store's state in the FastSpring Dashboard from "Offline" to "Online" if you haven't already.
+2. Verify that the Embedded Store can be accessed from the browser.
+3. Verify that the Embedded Store doesn't show the "Test Mode" badge at the top anymore.
+   !["Test Mode" badge](assets/screenshot-test-mode.png)
+4. Double-check that the `data-popup-webhook-received` attribute is set properly. Otherwise, your store will work nicely, but your app won't unlock automatically.
+
+So when you make a release build, **make sure to test that automatic unlocking still works** at least once. I suggest setting up a 100% discount coupon for this so you don't incur any purchase fees.
 
 ## Architecture
 
 This package doesn't have a lot going on in terms of architecture, but here are the most important parts:
 
-- [`FastSpringStore`](https://github.com/CleanCocoa/FastSpringStore/blob/main/Sources/FastSpringStore/FastSpringStore.swift) is your **entry point**. It manages the store window and forwards purchase callbacks. 
+- [`FastSpringStore`](https://github.com/CleanCocoa/FastSpringStore/blob/main/Sources/FastSpringStore/FastSpringStore.swift) is your **entry point**. It manages the store window and forwards purchase callbacks.
 
     Simplified, the API is:
     ```swift
@@ -188,8 +219,8 @@ This package doesn't have a lot going on in terms of architecture, but here are 
         func closeWindow()
     }
     ```
-    
-- [`FastSpringPurchase`](https://github.com/CleanCocoa/FastSpringStore/blob/main/Sources/FastSpringStore/FastSpringPurchase.swift) is the payload (_Data-Transfer Object_) that contains all information of a successful purchase. You can offer multiple products in a store, and bundles, too. So you will get an array of purchases and each purchase can contain multiple `License`s. 
+
+- [`FastSpringPurchase`](https://github.com/CleanCocoa/FastSpringStore/blob/main/Sources/FastSpringStore/FastSpringPurchase.swift) is the payload (_Data-Transfer Object_) that contains all information of a successful purchase. You can offer multiple products in a store, and bundles, too. So you will get an array of purchases and each purchase can contain multiple `License`s.
 
     Simplified:
     ```swift
