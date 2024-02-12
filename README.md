@@ -101,7 +101,7 @@ If it works in the browser, it'll work in the app.
 So once you see a checkout form to make purchases, you're good to go. We'll embed that in the app next.
 
 > [!WARNING]
-> ![Screenshot of the store's loading animations](assets/screenshot-loading-failure.png)
+> <img alt="Screenshot of the store's loading animations" src="assets/screenshot-loading-failure.png" width="40%">
 >
 > Do you just see placeholder loading animations?
 >
@@ -182,7 +182,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 When you call `showStore()`, you should see a small window appear that displays your Embedded Storefront similar to how the web browser does.
 
 > [!WARNING]
-> ![Screenshot of the store's loading animations](assets/screenshot-loading-failure.png)
+> <img alt="Screenshot of the store's loading animations" src="assets/screenshot-loading-failure.png" width="40%">
 >
 > If you just see placeholder loading animations, verify that you can access the URL in your web browser, first.
 >
